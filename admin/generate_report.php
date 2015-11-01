@@ -2,8 +2,9 @@
     
     session_start();
     include('db.php');
-    $title = array();
-			$value = array();
+    $subject_name = array();
+	$subject_id = array();
+    $answer = array();
 ?>
 
 <!DOCTYPE html>
@@ -122,25 +123,37 @@ $type = $_POST['hidden'];
 switch ($type) {
 	case 'faculty':
 		$name = $_POST['report'];
-		$sql = 'SELECT feedback.answer,subject.subject_name
+		$sql = 'SELECT distinct subject.subject_id,subject.subject_name
 				FROM faculty
 				INNER JOIN feedback,subject
 				WHERE
 				faculty.faculty_id = feedback.faculty_id
 				AND subject.subject_id = feedback.subject_id
 				AND faculty.faculty_name = "'.$_POST['report'].'"
-
 				';
+               // echo $sql;
 		$result = $conn->query($sql);
 		if($result->num_rows >0 ){
 			
 			while($row = $result->fetch_assoc()){
-				array_push($title, $row['subject_name']);
-				array_push($value, $row['answer']);
+				array_push($subject_name, $row['subject_name']);
+				array_push($subject_id, $row['subject_id']);
 			}
-			$count = count($title);
+			$count = count($subject_name);
 			//echo count($value);
 		}
+        foreach ($subject_id as $sub) {
+             //echo $sub.'<br>';
+            $sql = 'select sum(answer) as answer from feedback where subject_id = '.$sub;
+            $result = $conn->query($sql);
+            if($result->num_rows > 0){
+                while ($row = $result->fetch_assoc()) {
+                    //echo $row['answer'].'<br>';
+                    array_push($answer,$row['answer']);
+                }
+            }
+            //echo $sql.'<br>';
+        }
 	break;
 	
 	case 'class':
@@ -180,7 +193,7 @@ switch ($type) {
 				# code...
 				break;
 		}
-		$sql = 'SELECT subject.subject_name, feedback.answer 
+		$sql = 'SELECT distinct subject.subject_name,feedback.subject_id 
 				FROM `subject`
 				INNER JOIN feedback
 				WHERE 
@@ -192,11 +205,24 @@ switch ($type) {
 			//echo 'good';
 			
 			while($row = $result->fetch_assoc()){
-				array_push($title, $row['subject_name']);
-				array_push($value, $row['answer']);
+				array_push($subject_name, $row['subject_name']);
+				array_push($subject_id, $row['subject_id']);
+                //array_push($value, $row['answer']);
 			}
-			$count = count($title);
+			$count = count($subject_name);
 		}
+        foreach ($subject_id as $sub) {
+            //echo $sub.'<br>';
+            $sql = 'select sum(answer) as answer from feedback where subject_id = '.$sub;
+            $result = $conn->query($sql);
+            if($result->num_rows > 0){
+                while ($row = $result->fetch_assoc()) {
+                    echo $row['answer'].'<br>';
+                    array_push($answer,$row['answer']);
+                }
+            }
+            echo $sql.'<br>';
+        }
 	break;
 	/*
 	case 'department':
@@ -218,7 +244,7 @@ switch ($type) {
           ['label Title', 'Label value'],
 		  <?php
 			for($i=0;$i<$count;$i++){?>
-			['<?php echo $title[$i] ?>',<?php echo $value[$i] ?>],
+			['<?php echo $subject_name[$i] ?>',<?php echo $answer[$i] ?>],
 			<?php } ?>
         ]);
 

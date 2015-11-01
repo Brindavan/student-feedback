@@ -41,11 +41,11 @@ include('../admin/db.php');
     <div class="top-nav">
       <?php 
       
-        $sql = 'select subject.subject_id,subject.subject_code,subject.subject_name,faculty.faculty_name from subject 
+        $sql = 'select subject.subject_id, subject.subject_code,subject.subject_name,faculty.faculty_name from subject 
                 inner join faculty, faculty_subject
                 where department = '.$_SESSION['department'] .' and sem = '.$_SESSION['sem'] .'
-                and faculty.faculty_id = faculty_subject.faculty_id and faculty_subject.subject_id = subject.subject_id'
-                ;
+                and faculty.faculty_id = faculty_subject.faculty_id and faculty_subject.subject_id = subject.subject_id
+                order by subject.subject_code';
         $result = $conn->query($sql);
         $i=1;
         if($result->num_rows >0){
@@ -160,8 +160,8 @@ include('../admin/db.php');
     </div>
     <!-- /. WRAPPER  -->
     <?php }?>
-    <footer >
-        &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+<footer >
+        &copy; 2015 Student-Feedback
     </footer>
     <!-- /. FOOTER  -->
     <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->

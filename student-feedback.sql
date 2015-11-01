@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2015 at 09:04 AM
+-- Generation Time: Nov 01, 2015 at 08:30 AM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -105,12 +105,12 @@ INSERT INTO `faculty_subject` (`id`, `faculty_id`, `subject_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `feedback` (
-`feedback_id` int(11) NOT NULL,
+  `feedback_id` int(11) NOT NULL,
   `student_id` varchar(15) NOT NULL,
   `subject_id` int(11) NOT NULL,
   `faculty_id` varchar(15) NOT NULL,
   `answer` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -155,9 +155,10 @@ INSERT INTO `question` (`question_id`, `question`) VALUES
 -- Stand-in structure for view `search_view`
 --
 CREATE TABLE IF NOT EXISTS `search_view` (
-`faculty_id` varchar(11)
-,`faculty_name` varchar(50)
+`student_id` varchar(20)
+,`stu_name` varchar(50)
 ,`department_id` int(11)
+,`semester` int(11)
 );
 -- --------------------------------------------------------
 
@@ -258,7 +259,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`sn`, `username`, `password`, `Category`) VALUES
-(2, 'Ravi', '1790f19d6edb09a7a94870e99c7b0689', 'user'),
 (1, 'Admin', '21232f297a57a5a743894a0e4a801fc3', 'admin'),
 (7, 'Rohit', '2d235ace000a3ad85f590e321c89bb99', 'user'),
 (4, 'Rahul', '439ed537979d8e831561964dbbbd7413', 'user'),
@@ -274,7 +274,7 @@ INSERT INTO `user` (`sn`, `username`, `password`, `Category`) VALUES
 --
 DROP TABLE IF EXISTS `search_view`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`student`@`localhost` SQL SECURITY DEFINER VIEW `search_view` AS select `faculty`.`faculty_id` AS `faculty_id`,`faculty`.`faculty_name` AS `faculty_name`,`faculty`.`department_id` AS `department_id` from `faculty` where ((`faculty`.`faculty_id` like '%13%') or (`faculty`.`faculty_name` like '%13%') or (`faculty`.`department_id` like '%13%'));
+CREATE ALGORITHM=UNDEFINED DEFINER=`student`@`localhost` SQL SECURITY DEFINER VIEW `search_view` AS select `student`.`student_id` AS `student_id`,`student`.`stu_name` AS `stu_name`,`student`.`department_id` AS `department_id`,`student`.`semester` AS `semester` from `student` where ((`student`.`student_id` like '%ramu%') or (`student`.`stu_name` like '%ramu%') or (`student`.`department_id` like '%ramu%') or (`student`.`semester` like '%ramu%'));
 
 --
 -- Indexes for dumped tables
@@ -291,12 +291,6 @@ ALTER TABLE `department`
 --
 ALTER TABLE `faculty_subject`
  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `feedback`
---
-ALTER TABLE `feedback`
- ADD PRIMARY KEY (`feedback_id`);
 
 --
 -- Indexes for table `student`
@@ -325,11 +319,6 @@ ALTER TABLE `user`
 --
 ALTER TABLE `faculty_subject`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=17;
---
--- AUTO_INCREMENT for table `feedback`
---
-ALTER TABLE `feedback`
-MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `subject`
 --
